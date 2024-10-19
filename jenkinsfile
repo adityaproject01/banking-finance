@@ -51,11 +51,16 @@ pipeline {
                     }
                 }
         
-                stage('Push-Image') {
-                    steps {
-                        sh 'docker push aditya310319988/banking-project:3.0'
-                    }
-                }
+                 stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t aditya310319988/banking-project:3.0 .'
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                sh 'docker push aditya310319988/banking-project:3.0'
+            }
+        }
 
        stage('Config & Deployment') {
             steps {

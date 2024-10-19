@@ -38,6 +38,7 @@ pipeline {
                     sh 'echo "${dockerpassword}" | docker login -u "${dockerlogin}" --password-stdin'
                 }
             }
+]
 
        stage('Push-Image') {
            steps {

@@ -31,14 +31,19 @@ pipeline {
                 }
 
 
-              stage('Docker-Login') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'Docker-login', passwordVariable: 'dockerpassword', usernameVariable: 'dockerlogin')]) {
-                    // Use --password-stdin for a secure login
-                    sh 'echo "${dockerpassword}" | docker login -u "${dockerlogin}" --password-stdin'
+            stage('Docker-Login') {
+                steps {
+                    withCredentials([usernamePassword(credentialsId: 'Docker-login', passwordVariable: 'dockerpassword', usernameVariable: 'dockerlogin')]) {
+                        sh 'echo "${dockerpassword}" | docker login -u "${dockerlogin}" --password-stdin'
+                    }
                 }
             }
-}
+            stage('Inspect Docker Config') {
+                steps {
+                    sh 'cat ~/.docker/config.json'
+                }
+            }
+
        stage('Push-Image') {
            steps {
                sh 'docker push aditya/banking-project-demo:3.0'

@@ -38,8 +38,7 @@ pipeline {
                     sh 'echo "${dockerpassword}" | docker login -u "${dockerlogin}" --password-stdin'
                 }
             }
-]
-
+}
        stage('Push-Image') {
            steps {
                sh 'docker push aditya/banking-project-demo:3.0'

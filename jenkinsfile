@@ -7,7 +7,7 @@ pipeline {
     }
 
     stages {
-        tage('Build') {
+        stage('Build') {
             steps {
                 // Get code from GitHub
                 git 'https://github.com/adityaproject01/banking-finance.git'

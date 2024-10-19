@@ -7,21 +7,23 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
+        tage('Build') {
             steps {
-                // Get some code from a GitHub repository
+                // Get code from GitHub
                 git 'https://github.com/adityaproject01/banking-finance.git'
 
-                // Run Maven on a Unix agent.
-                sh "mvn -Dmaven.test.failure.ignore=true clean package"
-
+                // Run Maven clean and package without ignoring test failures
+                sh "mvn clean package"
             }        
         }
-       stage('Generate Test Reports') {
-           steps {
-               publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '/var/lib/jenkins/workspace/Bank-Finance/target/surefire-reports', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-                    }
+        stage('Generate Test Reports') {
+            steps {
+                // Publish HTML test reports
+                publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, 
+                             keepAll: false, reportDir: 'target/surefire-reports', 
+                             reportFiles: 'index.html', reportName: 'HTML Report'])
             }
+        }
        stage('Create Docker Image') {
            steps {
                sh 'docker build -t aditya/banking-project-demo:3.0 .'

@@ -31,35 +31,43 @@ pipeline {
                 }
 
 
-            stage('Docker-Login') {
-                steps {
-                    withCredentials([usernamePassword(credentialsId: 'Docker-login', passwordVariable: 'dockerpassword', usernameVariable: 'dockerlogin')]) {
-                        sh 'echo "${dockerpassword}" | docker login -u "${dockerlogin}" --password-stdin'
+           stage('Docker-Login') {
+                    steps {
+                        withCredentials([usernamePassword(credentialsId: 'Docker-login', passwordVariable: 'dockerpassword', usernameVariable: 'dockerlogin')]) {
+                            sh 'echo "${dockerpassword}" | docker login -u "${dockerlogin}" --password-stdin'
+                        }
                     }
                 }
-            }
-            stage('Inspect Docker Config') {
-                steps {
-                    sh 'cat ~/.docker/config.json'
+        
+                stage('Clear Docker Config') {
+                    steps {
+                        sh 'echo "{}" > /var/lib/jenkins/.docker/config.json'
+                    }
                 }
-            }
+        
+                stage('Inspect Docker Config') {
+                    steps {
+                        sh 'cat ~/.docker/config.json'
+                    }
+                }
+        
+                stage('Push-Image') {
+                    steps {
+                        sh 'docker push aditya/banking-project-demo:3.0'
+                    }
+                }
 
-       stage('Push-Image') {
-           steps {
-               sh 'docker push aditya/banking-project-demo:3.0'
-                     }
-                }
        stage('Config & Deployment') {
             steps {
                withCredentials([aws(accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'AWS-ID', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     dir('terraform-files') {
-                    sh 'sudo chmod 600 mykey.pem'
-                    sh 'terraform init'
-                    sh 'terraform validate'
-                    sh 'terraform apply --auto-approve'
-}
+                        sh 'sudo chmod 600 mykey.pem'
+                        sh 'terraform init'
+                        sh 'terraform validate'
+                        sh 'terraform apply --auto-approve'
+                    }
+                }
+            }
+        }
     }
-}
-}
-}
 }

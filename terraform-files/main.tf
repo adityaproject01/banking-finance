@@ -1,12 +1,13 @@
 resource "aws_instance" "test-server" {
   ami = "ami-0f71013b2c8bd2c29"
   instance_type = "t2.micro"
-  key_name = "docker"
-  vpc_security_group_ids = ["sg-04f83cc34c7a29093"]
+  key_name = "projectBanking"
+sg-0290f9f790be5f3e3 (launch-wizard-18)
+  vpc_security_group_ids = ["sg-0290f9f790be5f3e3"]
   connection {
      type = "ssh"
      user = "ec2-user"
-     private_key = file("./docker.pem")
+     private_key = file("./projectBanking.pem")
      host = self.public_ip
      }
   provisioner "remote-exec" {
